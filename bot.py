@@ -45,8 +45,8 @@ async def start(message: types.Message):
     await message.answer_photo(photo=photo, caption=caption_text)
 
     await message.answer(
-        "Оберіть, будь ласка, мову, щоб отримати свій шаблон ⬇️\n\n",
-        "Please choose your language to get your template ⬇️"
+        "Оберіть, будь ласка, мову, щоб отримати свій шаблон ⬇️\n\n"
+        "Please choose your language to get your template ⬇️",
         reply_markup=keyboard
     )
 
