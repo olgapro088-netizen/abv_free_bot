@@ -38,18 +38,17 @@ async def start(message: types.Message):
     )
 
     caption_text = (
-        "🇺🇦 Вітаємо, з Вами ABV Простір 👋\n"
-        "Оберіть, будь ласка, мову, щоб отримати свій шаблон ⬇️\n\n"
-        "🇬🇧 Welcome, this is ABV Space 👋\n"
-        "Please choose your language to get your template ⬇️"
+        "🇺🇦 Вітаємо, з Вами ABV Space 👋\n\n"
+        "🇬🇧 Welcome, this is ABV Space 👋"
     )
 
     await message.answer_photo(photo=photo, caption=caption_text)
 
     await message.answer(
-    reply_markup=keyboard
-)
-
+        "Оберіть, будь ласка, мову, щоб отримати свій шаблон ⬇️\n\n",
+        "Please choose your language to get your template ⬇️"
+        reply_markup=keyboard
+    )
 
 
 # ------------------------
