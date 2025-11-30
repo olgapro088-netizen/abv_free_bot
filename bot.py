@@ -2,7 +2,7 @@ import asyncio
 import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,54 +13,44 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 UA_CHANNEL = "@avbprostir"
 EN_CHANNEL = "@abvspace_en"
 
-UA_TEMPLATE_LINK = "https://www.notion.so/notiocraft/2bbb3b25b5c8809c80cbd9635662345b?source=copy_link"
-EN_TEMPLATE_LINK = "https://www.notion.so/notiocraft/2bbb3b25b5c8809ca4dbd959476eb7d5?source=copy_link"
+# Лінки шаблонів
+UA_TEMPLATE = "https://www.notion.so/notiocraft/2bbb3b25b5c8809c80cbd9635662345b?source=copy_link"
+EN_TEMPLATE = "https://www.notion.so/notiocraft/2bbb3b25b5c8809ca4dbd959476eb7d5?source=copy_link"
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-# ---------- START ----------
+
+# ------------------------
+#   Головне меню /start
+# ------------------------
 @dp.message(CommandStart())
 async def start(message: types.Message):
-    builder = InlineKeyboardBuilder()
-    builder.button(text="🇺🇦 Отримати український шаблон", callback_data="choose_ua")
-    builder.button(text="🇬🇧 Get English template", callback_data="choose_en")
-    builder.adjust(1)
+
+    # Логотип
+    logo_path = "logo.png"
+    photo = FSInputFile(logo_path)
+
+    # Кнопки вибору мови
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🇺🇦 Отримати український шаблон", callback_data="get_ua")],
+        [InlineKeyboardButton(text="🇬🇧 Get English template", callback_data="get_en")]
+    ])
 
     await message.answer_photo(
-        photo="https://i.imgur.com/5vcgCcK.png",  # Твоє лого, завантажене на Imgur
-        caption="Привіт! Обери мову, щоб отримати свій шаблон 👇",
-        reply_markup=builder.as_markup()
+        photo=photo,
+        caption="Привіт! Оберіть мову, щоб отримати свій шаблон ⬇️"
     )
 
-# ---------- ПЕРЕХІД UA або EN ----------
-@dp.callback_query(lambda c: c.data in ["choose_ua", "choose_en"])
-async def choose_language(callback: types.CallbackQuery):
-    choice = callback.data
-
-    if choice == "choose_ua":
-        await ask_to_subscribe(callback, language="ua")
-    else:
-        await ask_to_subscribe(callback, language="en")
-
-# ---------- ПРОСИМО ПІДПИСАТИСЯ ----------
-async def ask_to_subscribe(callback, language):
-    builder = InlineKeyboardBuilder()
-
-    if language == "ua":
-        builder.button(text="Підписатися на канал 🇺🇦", url=f"https://t.me/{UA_CHANNEL[1:]}")
-        builder.button(text="Я підписався ✔️", callback_data="check_ua")
-        text = "Будь ласка, підпишись на канал, щоб отримати шаблон:"
-    else:
-        builder.button(text="Subscribe to EN Channel 🇬🇧", url=f"https://t.me/{EN_CHANNEL[1:]}")
-        builder.button(text="I subscribed ✔️", callback_data="check_en")
-        text = "Please subscribe to the channel to get your template:"
-
-    builder.adjust(1)
-    await callback.message.answer(text, reply_markup=builder.as_markup())
+    await message.answer(
+        "🎁 Щоб БЕЗКОШТОВНО отримати шаблон, натисніть нижче:",
+        reply_markup=keyboard
+    )
 
 
-# ---------- ПЕРЕВІРКА ПІДПИСКИ ----------
+# ------------------------
+#   Перевірка підписки
+# ------------------------
 async def is_subscribed(user_id, channel):
     try:
         member = await bot.get_chat_member(chat_id=channel, user_id=user_id)
@@ -68,25 +58,124 @@ async def is_subscribed(user_id, channel):
     except:
         return False
 
-@dp.callback_query(lambda c: c.data in ["check_ua", "check_en"])
-async def check_subscription(callback: types.CallbackQuery):
+
+# ------------------------
+#     Український шаблон
+# ------------------------
+@dp.callback_query(lambda c: c.data == "get_ua")
+async def choose_ua(callback: types.CallbackQuery):
+
     user_id = callback.from_user.id
-    check_type = callback.data
 
-    if check_type == "check_ua":
-        subscribed = await is_subscribed(user_id, UA_CHANNEL)
-        if subscribed:
-            await callback.message.answer(f"Дякую за підписку! Ось твій шаблон:👇\n\n{UA_TEMPLATE_LINK}")
-        else:
-            await callback.message.answer("Підписку не знайдено 😢\nСпробуй ще раз.")
-    else:
-        subscribed = await is_subscribed(user_id, EN_CHANNEL)
-        if subscribed:
-            await callback.message.answer(f"Thanks for subscribing! Here is your template 👇\n\n{EN_TEMPLATE_LINK}")
-        else:
-            await callback.message.answer("Subscription not detected 😢\nTry again.")
+    if await is_subscribed(user_id, UA_CHANNEL):
 
-# ---------- RUN ----------
+        # Вже підписаний — одразу видаємо
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📁 Отримати шаблон", url=UA_TEMPLATE)]
+        ])
+
+        await callback.message.answer(
+            "Дякуємо, що Ви вже з нами! 💛\nОсь Ваш шаблон:",
+            reply_markup=keyboard
+        )
+        return
+
+    # НЕ підписаний — просимо підписатися
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📌 Підписатися на канал", url=f"https://t.me/{UA_CHANNEL[1:]}")],
+        [InlineKeyboardButton(text="✅ Готово", callback_data="ua_ready")]
+    ])
+
+    await callback.message.answer(
+        "Вітаємо, з Вами ABV Space 👋\n\n"
+        "⚠️ Щоб отримати цей шаблон, Вам потрібно підписатися на наш телеграм-канал:\n"
+        f"{UA_CHANNEL}\n\n"
+        "ℹ️ У каналі ми публікуємо корисні поради та рекомендації по Notion, "
+        "анонси нових шаблонів та пропозицій.\n\n"
+        "Після підписки натисніть кнопку:\n"
+        "«✅ Готово»",
+        reply_markup=keyboard
+    )
+
+
+@dp.callback_query(lambda c: c.data == "ua_ready")
+async def ua_ready(callback: types.CallbackQuery):
+
+    user_id = callback.from_user.id
+
+    if not await is_subscribed(user_id, UA_CHANNEL):
+        await callback.answer("Ви ще не підписались 🙏", show_alert=True)
+        return
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📁 Отримати шаблон", url=UA_TEMPLATE)]
+    ])
+
+    await callback.message.answer(
+        "Дякуємо за підписку! Ось Ваш шаблон: ⬇️",
+        reply_markup=keyboard
+    )
+
+
+# ------------------------
+#     English template
+# ------------------------
+@dp.callback_query(lambda c: c.data == "get_en")
+async def choose_en(callback: types.CallbackQuery):
+
+    user_id = callback.from_user.id
+
+    if await is_subscribed(user_id, EN_CHANNEL):
+
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📁 Get the template", url=EN_TEMPLATE)]
+        ])
+
+        await callback.message.answer(
+            "Thank you! You are already subscribed 💛\nHere is your template:",
+            reply_markup=keyboard
+        )
+        return
+
+    # Not subscribed — ask to subscribe
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📌 Subscribe to the channel", url=f"https://t.me/{EN_CHANNEL[1:]}")],
+        [InlineKeyboardButton(text="✅ Done", callback_data="en_ready")]
+    ])
+
+    await callback.message.answer(
+        "Welcome, ABV Space here 👋\n\n"
+        "⚠️ To receive this template, please subscribe to our English Telegram channel:\n"
+        f"{EN_CHANNEL}\n\n"
+        "ℹ️ We publish Notion tips, recommendations, announcements and updates.\n\n"
+        "After subscribing, press:\n"
+        "«✅ Done»",
+        reply_markup=keyboard
+    )
+
+
+@dp.callback_query(lambda c: c.data == "en_ready")
+async def en_ready(callback: types.CallbackQuery):
+
+    user_id = callback.from_user.id
+
+    if not await is_subscribed(user_id, EN_CHANNEL):
+        await callback.answer("You are not subscribed yet 🙏", show_alert=True)
+        return
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="📁 Get the template", url=EN_TEMPLATE)]
+    ])
+
+    await callback.message.answer(
+        "Thank you for subscribing! Here is your template: ⬇️",
+        reply_markup=keyboard
+    )
+
+
+# ------------------------
+#    RUN
+# ------------------------
 async def main():
     await dp.start_polling(bot)
 
