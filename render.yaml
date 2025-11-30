@@ -1,9 +1,8 @@
 services:
-  - type: worker
-    name: abv-free-bot
+  - type: web
+    name: abv_free_bot
     env: python
-    buildCommand: ""
-    startCommand: python bot.py
-    envVars:
-      - key: BOT_TOKEN
-        sync: false
+    pythonVersion: 3.11
+    buildCommand: "pip install --no-cache-dir -r requirements.txt"
+    startCommand: "python bot.py"
+    autoDeploy: true
