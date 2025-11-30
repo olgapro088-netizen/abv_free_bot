@@ -46,10 +46,7 @@ async def start(message: types.Message):
 
     await message.answer_photo(photo=photo, caption=caption_text)
 
-    await message.answer(
-        "🎁 Щоб БЕЗКОШТОВНО отримати шаблон — натисніть нижче:",
-        reply_markup=keyboard
-    )
+    
 
 
 # ------------------------
