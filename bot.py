@@ -38,7 +38,7 @@ async def start(message: types.Message):
     )
 
     caption_text = (
-        "🇺🇦 Вітаємо, з Вами ABV Space 👋\n"
+        "🇺🇦 Вітаємо, з Вами ABV Простір 👋\n"
         "Оберіть, будь ласка, мову, щоб отримати свій шаблон ⬇️\n\n"
         "🇬🇧 Welcome, this is ABV Space 👋\n"
         "Please choose your language to get your template ⬇️"
@@ -46,7 +46,10 @@ async def start(message: types.Message):
 
     await message.answer_photo(photo=photo, caption=caption_text)
 
-    
+    await message.answer(
+    reply_markup=keyboard
+)
+
 
 
 # ------------------------
