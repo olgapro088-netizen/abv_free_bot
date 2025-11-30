@@ -39,7 +39,8 @@ async def start(message: types.Message):
 
     await message.answer_photo(
         photo=photo,
-        caption="Привіт! Оберіть мову, щоб отримати свій шаблон ⬇️"
+        caption="🇺🇦 Вітаємо, з Вами ABV Space 👋 Оберіть, будь ласка, мову, щоб отримати свій шаблон ⬇️
+                 🇬🇧 Welcome, this is ABV Space 👋Please choose your language to get your template ⬇️"
     )
 
     await message.answer(
