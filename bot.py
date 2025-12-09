@@ -14,8 +14,8 @@ UA_CHANNEL = "@avbprostir"
 EN_CHANNEL = "@abvspace_en"
 
 # Лінки шаблонів
-UA_TEMPLATE = "https://www.notion.so/notiocraft/2bbb3b25b5c8809c80cbd9635662345b?source=copy_link"
-EN_TEMPLATE = "https://www.notion.so/notiocraft/2bbb3b25b5c8809ca4dbd959476eb7d5?source=copy_link"
+UA_TEMPLATE = "https://www.notion.so/UA-2c31d21a43998006a631cb6c928090a9?source=copy_link"
+EN_TEMPLATE = "https://www.notion.so/Your-template-Goal-Check-10-Questions-EN-2c31d21a439980518e13d9a6444ee767?source=copy_link"
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
