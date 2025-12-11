@@ -10,7 +10,7 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # Канали
-UA_CHANNEL = "@avbprostir"
+UA_CHANNEL = "@abvprostir"
 EN_CHANNEL = "@abvspace_en"
 
 # Лінки шаблонів
@@ -38,7 +38,7 @@ async def start(message: types.Message):
     )
 
     caption_text = (
-        "🇺🇦 Вітаємо, з Вами ABV Space 👋\n\n"
+        "🇺🇦 Вітаємо, з Вами ABV Простір 👋\n\n"
         "🇬🇧 Welcome, this is ABV Space 👋"
     )
 
