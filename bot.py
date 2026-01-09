@@ -19,6 +19,8 @@ UA_TEMPLATE_2 = "https://abv-site.notion.site/UA-2c31d21a439980409644e61f9eeba24
 
 EN_TEMPLATE = "https://www.notion.so/Your-template-Goal-Check-10-Questions-EN-2c31d21a439980518e13d9a6444ee767?source=copy_link"
 
+ABV_SHOWCASE = "https://abv-site.notion.site/2e31d21a43998011a8fcc3ead55994e7"
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
@@ -82,6 +84,26 @@ async def choose_ua(callback: types.CallbackQuery):
             "Дякуємо, що Ви вже з нами! 💛\nОберіть шаблон ⬇️",
             reply_markup=keyboard
         )
+        keyboard_more = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(
+            text="✨ Переглянути всі шаблони ABV",
+            url=ABV_SHOWCASE
+        )]
+    ]
+)
+
+await callback.message.answer(
+    "✨ Хочете більше?\n\n"
+    "У ABV Просторі є готові системи:\n"
+    "• фінанси\n"
+    "• фокус і планування\n"
+    "• робочі простори в Notion\n\n"
+    "Це для тих, хто хоче не один шаблон,\n"
+    "а систему під себе.",
+    reply_markup=keyboard_more
+)
+
         return
 
     # Якщо ще не підписаний
@@ -122,6 +144,26 @@ async def ua_ready(callback: types.CallbackQuery):
         "Дякуємо за підписку! 💛\nОберіть шаблон ⬇️",
         reply_markup=keyboard
     )
+    keyboard_more = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(
+            text="✨ Переглянути всі шаблони ABV",
+            url=ABV_SHOWCASE
+        )]
+    ]
+)
+
+await callback.message.answer(
+    "✨ Хочете більше?\n\n"
+    "У ABV Просторі є готові системи:\n"
+    "• фінанси\n"
+    "• фокус і планування\n"
+    "• робочі простори в Notion\n\n"
+    "Це для тих, хто хоче не один шаблон,\n"
+    "а систему під себе.",
+    reply_markup=keyboard_more
+)
+
 
 # ------------------------
 #     English Template
