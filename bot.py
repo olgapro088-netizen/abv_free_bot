@@ -20,7 +20,7 @@ UA_TEMPLATE_2 = "https://abv-site.notion.site/UA-2c31d21a439980409644e61f9eeba24
 EN_TEMPLATE = "https://www.notion.so/Your-template-Goal-Check-10-Questions-EN-2c31d21a439980518e13d9a6444ee767?source=copy_link"
 
 ABV_SHOWCASE = "https://abv-site.notion.site/2e31d21a43998011a8fcc3ead55994e7"
-GOOGLE_SHEETS_WEBHOOK = "AKfycbyfR8rlQWo6_exuMo9yLIRKAjX0imrH9JK_-NO565FRUXW0JSPgIcIDX8gFoCF4B82m-Q"
+GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbyfR8rlQWo6_exuMo9yLIRKAjX0imrH9JK_-NO565FRUXW0JSPgIcIDX8gFoCF4B82m-Q/exec"
 
 
 bot = Bot(token=BOT_TOKEN)
