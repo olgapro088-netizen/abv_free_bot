@@ -31,10 +31,9 @@ async def start(message: types.Message):
     logo_path = "logo.png"
     photo = FSInputFile(logo_path)
 
-    # Кнопки вибору мови
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="🇺🇦 Отримати український шаблон", callback_data="get_ua")],
+            [InlineKeyboardButton(text="🇺🇦 Отримати українські шаблони", callback_data="get_ua")],
             [InlineKeyboardButton(text="🇬🇧 Get English template", callback_data="get_en")]
         ]
     )
@@ -47,11 +46,10 @@ async def start(message: types.Message):
     await message.answer_photo(photo=photo, caption=caption_text)
 
     await message.answer(
-        "Оберіть, будь ласка, мову, щоб отримати свій шаблон ⬇️\n\n"
-        "Please choose your language to get your template ⬇️",
+        "Оберіть, будь ласка, мову, щоб отримати шаблони ⬇️\n\n"
+        "Please choose your language to get the template ⬇️",
         reply_markup=keyboard
     )
-
 
 # ------------------------
 #   Перевірка підписки
@@ -63,27 +61,32 @@ async def is_subscribed(user_id, channel):
     except:
         return False
 
-
 # ------------------------
-#     Український шаблон
+#     Українські шаблони
 # ------------------------
 @dp.callback_query(lambda c: c.data == "get_ua")
 async def choose_ua(callback: types.CallbackQuery):
 
     user_id = callback.from_user.id
 
+    # Якщо вже підписаний — одразу даємо 2 шаблони
     if await is_subscribed(user_id, UA_CHANNEL):
         keyboard = InlineKeyboardMarkup(
-            inline_keyboard=[[InlineKeyboardButton(text="📁 Отримати шаблон", url=UA_TEMPLATE)]]
+            inline_keyboard=[
+                [InlineKeyboardButton(text="📁 Шаблон перевірки цілі", url=UA_TEMPLATE)],
+                [InlineKeyboardButton(text="📁 Фортеця ясності", url=UA_TEMPLATE_2)]
+            ]
         )
+
         await callback.message.answer(
-            "Дякуємо, що Ви вже з нами! 💛\nОсь Ваш шаблон:",
+            "Дякуємо, що Ви вже з нами! 💛\nОберіть шаблон ⬇️",
             reply_markup=keyboard
         )
         return
 
+    # Якщо ще не підписаний
     text = (
-        "⚠️ Щоб отримати цей шаблон БЕЗКОШТОВНО, підпишіться на наш телеграм-канал.\n\n"
+        "⚠️ Щоб отримати ці шаблони БЕЗКОШТОВНО, підпишіться на наш телеграм-канал.\n\n"
         "ℹ️ У каналі ми публікуємо корисні поради та рекомендації по Notion,\n"
         "анонси нових шаблонів та пропозицій.\n\n"
         "Після підписки натисніть кнопку:\n"
@@ -99,7 +102,6 @@ async def choose_ua(callback: types.CallbackQuery):
 
     await callback.message.answer(text, reply_markup=keyboard)
 
-
 @dp.callback_query(lambda c: c.data == "ua_ready")
 async def ua_ready(callback: types.CallbackQuery):
 
@@ -111,16 +113,15 @@ async def ua_ready(callback: types.CallbackQuery):
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-        [InlineKeyboardButton(text="📁 Шаблон перевірки цілі", url=UA_TEMPLATE)],
-        [InlineKeyboardButton(text="📁 Фортеця ясності", url=UA_TEMPLATE_2)]
-    ]
+            [InlineKeyboardButton(text="📁 Шаблон перевірки цілі", url=UA_TEMPLATE)],
+            [InlineKeyboardButton(text="📁 Фортеця ясності", url=UA_TEMPLATE_2)]
+        ]
     )
 
     await callback.message.answer(
-        "Дякуємо за підписку! Ось Ваш шаблон ⬇️",
+        "Дякуємо за підписку! 💛\nОберіть шаблон ⬇️",
         reply_markup=keyboard
     )
-
 
 # ------------------------
 #     English Template
@@ -159,7 +160,6 @@ async def choose_en(callback: types.CallbackQuery):
 
     await callback.message.answer(text, reply_markup=keyboard)
 
-
 @dp.callback_query(lambda c: c.data == "en_ready")
 async def en_ready(callback: types.CallbackQuery):
 
@@ -178,7 +178,6 @@ async def en_ready(callback: types.CallbackQuery):
         reply_markup=keyboard
     )
 
-
 # ------------------------
 #    RUN
 # ------------------------
@@ -187,3 +186,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
